@@ -1,24 +1,23 @@
 pipeline {
-    agent {
-        label '!windows'
-    }
-    environment {
-        DISABLE_AUTH = 'true'
-        DB_ENGINE    = 'sqlite'
-    }
-    
+    agent any
     stages {
-        stage('Build') {
+        /* "Build" and "Test" stages omitted */
+
+        stage('Deploy - Staging') {
             steps {
-                echo "Database engine is ${DB_ENGINE}"
-                echo "DISABLE_AUTH is ${DISABLE_AUTH}"
-                sh 'printenv'
+                echo 'deploy staging'
             }
         }
 
-        stage('Test') {
+        stage('Sanity check') {
             steps {
-                sh 'node --version'
+                input "Does the staging environment look ok?"
+            }
+        }
+
+        stage('Deploy - Production') {
+            steps {
+                echo 'deploy production'
             }
         }
     }
